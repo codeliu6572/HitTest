@@ -34,30 +34,46 @@
 }
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-    CGPoint point=[[touches anyObject]locationInView:self.view];
-    
-    
-    CALayer *layer=[whiteView.layer hitTest:point];
-    if (layer==whiteView.layer) {
-        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"" message:@"Inside white layer" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-        [alertView show];
+    CGPoint point = [[touches anyObject] locationInView:self.view];
+    //convert point to the white layer's coordinates拿到在self.view上但同时在whiteView上的点，下面的同这里一样，不一一解释了
+    point = [whiteView.layer convertPoint:point fromLayer:self.view.layer]; //get layer using containsPoint:
+    if ([whiteView.layer containsPoint:point]) {
+        //convert point to blueLayer’s coordinates
+        point = [blueLayer convertPoint:point fromLayer:whiteView.layer];
+        if ([blueLayer containsPoint:point])
+        {
+            [[[UIAlertView alloc] initWithTitle:@"Inside Blue Layer"
+                                        message:nil
+                                       delegate:nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil] show];
+        }
+        else
+        {
+            [[[UIAlertView alloc] initWithTitle:@"Inside White Layer"
+                                        message:nil
+                                       delegate:nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles: nil]show];
+        }
+        
     }
-    else if (layer==blueLayer){
-        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"" message:@"Inside blue layer" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-        [alertView show];
-    }
+              
+    //－－－－－－－－－－华丽丽的分割线，从这里开始是我写的点击的方法，相对来说比上面使用起来更方便点
+//    CGPoint point=[[touches anyObject]locationInView:self.view];
     
-//    point=[whiteView.layer convertPoint:point fromLayer:self.view.layer];
-//    if ([blueLayer containsPoint:point]) {
+    
+//    CALayer *layer=[whiteView.layer hitTest:point];
+//    if (layer==whiteView.layer) {
+//        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"" message:@"Inside white layer" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+//        [alertView show];
+//    }
+//    else if (layer==blueLayer){
 //        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"" message:@"Inside blue layer" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
 //        [alertView show];
 //    }
-//    else
-//    {
-//        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"" message:@"Inside white layer" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-//        [alertView show];
-//
-//    }
+    
+
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
